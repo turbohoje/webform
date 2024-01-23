@@ -81,5 +81,6 @@ while True:
     last  = bytes(random.choice(WORDS)).decode("UTF-8")
     print(f"filling form with {first}, {last}, {email}")
     w.fill(first, last, email)
-    time.sleep(5)
-    del(w)
+    del(w) 
+    print("sleeping 10h")
+    time.sleep(10*3600)
