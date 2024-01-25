@@ -7,7 +7,7 @@ from selenium.common.exceptions import ElementClickInterceptedException, NoSuchE
 from selenium.webdriver.common.action_chains import ActionChains
 import re, urllib3
 
-import time, random
+import time, random, requests
 
 
 
@@ -65,7 +65,8 @@ class Westord:
             print("weird")
 
 
-
+IP = requests.get("https://icanhazip.com").text
+print(f"IP is {IP}")
 
 word_site = "https://www.mit.edu/~ecprice/wordlist.10000"
 connection_pool = urllib3.PoolManager()
@@ -76,11 +77,13 @@ WORDS = txt.splitlines()
 
 while True:
     w = Westord()
-    email = "turbohoje+" + bytes(random.choice(WORDS)).decode("UTF-8") + "@hotmail.com"
+    email = bytes(random.choice(WORDS)).decode("UTF-8")+"."+bytes(random.choice(WORDS)).decode("UTF-8") + "@hotmail.com"
     first = bytes(random.choice(WORDS)).decode("UTF-8") 
     last  = bytes(random.choice(WORDS)).decode("UTF-8")
     print(f"filling form with {first}, {last}, {email}")
     w.fill(first, last, email)
     del(w) 
+    
+
     print("sleeping 10h")
     time.sleep(10*3600)
