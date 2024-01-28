@@ -54,16 +54,22 @@ class Westord:
         except ElementClickInterceptedException:
             print("Done CIE")
         except NoSuchElementException:
-            print("no such element :tinkies:")
+            print("no such element :thinkies:")
+            return 1
         except StaleElementReferenceException:
             print("Ok stale")
+            return 2
         except KeyError:
             print("Key error")
+            return 3
         except UnexpectedAlertPresentException:
             print("do nothing")
+            return 4
         except UnexpectedAlertPresentException:
             print("weird")
+            return 5
 
+        return 0
 
 IP = requests.get("https://icanhazip.com").text
 print(f"IP is {IP}")
@@ -81,9 +87,12 @@ while True:
     first = bytes(random.choice(WORDS)).decode("UTF-8") 
     last  = bytes(random.choice(WORDS)).decode("UTF-8")
     print(f"filling form with {first}, {last}, {email}")
-    w.fill(first, last, email)
+    status = w.fill(first, last, email)
     del(w) 
     
-    sleeptime = 5 
-    print(f"sleeping {sleeptime}")
-    time.sleep(sleeptime)
+    if status == 0: #expected result, no immediate retry
+        sleeptime = 5 
+        print(f"sleeping {sleeptime}")
+        time.sleep(sleeptime)
+    else:
+        print(f"failed code {status}")
