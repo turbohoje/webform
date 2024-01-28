@@ -32,10 +32,10 @@ class Westord:
         driver.get("http://www.westword.com/best-of-denver-readers-choice-poll/best-extract-company")
         time.sleep(2)
         try:
-            print("clicking")
+            print("clicking via js")
             driver.execute_script("document.getElementById('question-18908674-1').click();")
             time.sleep(1)
-            print("submitting")
+            print("filling")
             driver.find_element("xpath", '/html/body/div[3]/div/div[3]/div/div[1]/form/div[2]/button').click()
             time.sleep(1)
             print("filling out email")
@@ -47,7 +47,7 @@ class Westord:
             driver.find_element("xpath", '/html/body/div[5]/div/div[2]/form/div/div[3]/div/input').send_keys(l)
             time.sleep(2)
             driver.find_element("xpath", '/html/body/div[5]/div/div[2]/form/div/div[5]/div/input').click()
-            time.sleep(4)
+            time.sleep(2)
 
             self.closeBrowser()
 
@@ -84,6 +84,6 @@ while True:
     w.fill(first, last, email)
     del(w) 
     
-
-    print("sleeping 10h")
-    time.sleep(10*3600)
+    sleeptime = 5 
+    print(f"sleeping {sleeptime}")
+    time.sleep(sleeptime)
