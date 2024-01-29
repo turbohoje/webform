@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 
 # Selenium imports.
 from selenium import webdriver
@@ -91,7 +91,7 @@ while True:
     del(w) 
     
     if status == 0: #expected result, no immediate retry
-        sleeptime = 5 
+        sleeptime = 3600
         print(f"sleeping {sleeptime}")
         time.sleep(sleeptime)
     else:
