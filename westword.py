@@ -5,7 +5,7 @@ from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 from selenium.common.exceptions import ElementClickInterceptedException, NoSuchElementException, StaleElementReferenceException
 from selenium.webdriver.common.action_chains import ActionChains
-import re, urllib3
+import re, urllib3, sys, re
 
 import time, random, requests
 
@@ -74,19 +74,34 @@ class Westord:
 IP = requests.get("https://icanhazip.com").text
 print(f"IP is {IP}")
 
-word_site = "https://www.mit.edu/~ecprice/wordlist.10000"
-connection_pool = urllib3.PoolManager()
-resp = connection_pool.request('GET',word_site )
-txt = resp.data
-WORDS = txt.splitlines()
+#word_site = "https://www.mit.edu/~ecprice/wordlist.10000"
+#connection_pool = urllib3.PoolManager()
+#resp = connection_pool.request('GET',word_site )
+#txt = resp.data
+#WORDS = txt.splitlines()
+
+first = []
+with open("first-names.txt") as fn:
+    for line in fn:
+        line = re.sub(r'[\s,]+', '', line)
+        first.append(line)
+
+last = []
+with open("last-names.txt") as ln:
+    for line in ln:
+        line = re.sub(r'[\s,]+', '', line)
+        last.append(line)
+
 
 
 while True:
     w = Westord()
-    email = bytes(random.choice(WORDS)).decode("UTF-8")+"."+bytes(random.choice(WORDS)).decode("UTF-8") + "@hotmail.com"
-    first = bytes(random.choice(WORDS)).decode("UTF-8") 
-    last  = bytes(random.choice(WORDS)).decode("UTF-8")
-    print(f"filling form with {first}, {last}, {email}")
+    first = random.choice(first)
+    last  = random.choice(last)
+    email = first+"."+last+"@"+random.choice(["hotmail.com", "gmail.com", "colorado.edu", "colostate.edu"])
+    
+    print(f"filling form with {first} {last}  {email}")
+
     status = w.fill(first, last, email)
     del(w) 
     
