@@ -74,12 +74,6 @@ class Westord:
 IP = requests.get("https://icanhazip.com").text
 print(f"IP is {IP}")
 
-#word_site = "https://www.mit.edu/~ecprice/wordlist.10000"
-#connection_pool = urllib3.PoolManager()
-#resp = connection_pool.request('GET',word_site )
-#txt = resp.data
-#WORDS = txt.splitlines()
-
 first = []
 with open("first-names.txt") as fn:
     for line in fn:
