@@ -96,17 +96,17 @@ with open("last-names.txt") as ln:
 
 while True:
     w = Westord()
-    first = random.choice(first)
-    last  = random.choice(last)
-    email = first+"."+last+"@"+random.choice(["hotmail.com", "gmail.com", "colorado.edu", "colostate.edu"])
+    firstN = random.choice(first)
+    lastN  = random.choice(last)
+    email = firstN+random.choice(["","_","."])+lastN+"@"+random.choice(["hotmail.com", "gmail.com", "colorado.edu", "colostate.edu"])
     
-    print(f"filling form with {first} {last}  {email}")
+    print(f"filling form with {firstN} {lastN}  {email}")
 
-    status = w.fill(first, last, email)
+    status = w.fill(firstN, lastN, email)
     del(w) 
     
     if status == 0: #expected result, no immediate retry
-        sleeptime = 3600
+        sleeptime = 3
         print(f"sleeping {sleeptime}")
         time.sleep(sleeptime)
     else:
