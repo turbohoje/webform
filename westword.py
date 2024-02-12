@@ -106,7 +106,7 @@ while True:
     del(w) 
     
     if status == 0: #expected result, no immediate retry
-        sleeptime = 3
+        sleeptime = 3600
         print(f"sleeping {sleeptime}")
         time.sleep(sleeptime)
     else:
