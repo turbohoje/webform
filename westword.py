@@ -35,11 +35,24 @@ class Westord:
             print("clicking via js")
             driver.execute_script("document.getElementById('question-18908674-1').click();")
             time.sleep(1)
+
+            #some other fields
+            for id in ["9","15", "16", "17"]:
+                print("clicking random "+id)
+                driver.execute_script("a = document.evaluate('/html/body/div[3]/div/div[3]/div/div[1]/form/ul[2]/li[6]/ul/li["+id+"]/div[2]/div/div[1]', document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue;")
+                driver.execute_script("randElement = a.children[Math.floor(Math.random() * a.children.length)];")
+                driver.execute_script("randElement.firstChild.nextSibling.click()")
+                time.sleep(1)
+
             print("filling")
             driver.find_element("xpath", '/html/body/div[3]/div/div[3]/div/div[1]/form/div[2]/button').click()
             time.sleep(1)
             print("filling out email")
-            time.sleep(1)
+            time.sleep(3)
+                                        #    /html/body/div[4]/div/div[2]/form/div/div[1]/div/input
+            #driver.find_element("xpath", '/html/body/div[4]/div/div[2]/form/div/div[1]/div/').click()
+            #print("post click, filling")
+
             driver.find_element("xpath", '/html/body/div[4]/div/div[2]/form/div/div[1]/div/input').send_keys(e)
             time.sleep(1)
             driver.find_element("xpath", '/html/body/div[4]/div/div[2]/form/div/div[2]/div/input').send_keys(f)
@@ -67,6 +80,8 @@ class Westord:
             return 4
         except UnexpectedAlertPresentException:
             print("weird")
+        except UnexpectedAlertPresentException:
+            print("weird another one")
             return 5
 
         return 0
