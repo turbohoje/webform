@@ -107,7 +107,7 @@ while True:
     w = Westord()
     firstN = random.choice(first)
     lastN  = random.choice(last)
-    email = firstN+random.choice(["","_","."])+lastN+"@"+random.choice(["hotmail.com", "gmail.com", "colorado.edu", "colostate.edu"])
+    email = firstN+random.choice(["","_","."])+lastN+"@"+random.choice(["hotmail.com", "gmail.com", "colorado.edu", "colostate.edu", "comcast.net"])
     
     print(f"filling form with {firstN} {lastN}  {email}")
 
