@@ -37,13 +37,14 @@ class Westord:
             time.sleep(1)
 
             #some other fields
-            for id in ["9","15", "16", "17"]:
+            for id in ["3", "4", "5", "6", "7", "9","10", "11", "12", "13", "15", "16", "17","18","19","21","22","23"]:
                 print("clicking random "+id)
                 driver.execute_script("a = document.evaluate('/html/body/div[3]/div/div[3]/div/div[1]/form/ul[2]/li[6]/ul/li["+id+"]/div[2]/div/div[1]', document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue;")
                 driver.execute_script("randElement = a.children[Math.floor(Math.random() * a.children.length)];")
                 driver.execute_script("randElement.firstChild.nextSibling.click()")
                 time.sleep(1)
 
+            
             print("filling")
             driver.find_element("xpath", '/html/body/div[3]/div/div[3]/div/div[1]/form/div[2]/button').click()
             time.sleep(1)
