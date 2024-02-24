@@ -36,8 +36,11 @@ class Westord:
             driver.execute_script("document.getElementById('question-18908674-1').click();")
             time.sleep(1)
 
-            #some other fields
-            for id in ["3", "4", "5", "6", "7", "9","10", "11", "12", "13", "15", "16", "17","18","19","21","22","23"]:
+            #some other fields, fill out a random number of them at random
+            i = ["3", "4", "5", "6", "7", "9","10", "11", "12", "13", "15", "16", "17","18","19","21","22","23"]
+            for x in range(0,random.randrange(len(i))):
+                i.pop(random.randrange(len(i)))
+            for id in i:
                 print("clicking random "+id)
                 driver.execute_script("a = document.evaluate('/html/body/div[3]/div/div[3]/div/div[1]/form/ul[2]/li[6]/ul/li["+id+"]/div[2]/div/div[1]', document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue;")
                 driver.execute_script("randElement = a.children[Math.floor(Math.random() * a.children.length)];")
