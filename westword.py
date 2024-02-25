@@ -56,7 +56,7 @@ class Westord:
                                         #    /html/body/div[4]/div/div[2]/form/div/div[1]/div/input
             #driver.find_element("xpath", '/html/body/div[4]/div/div[2]/form/div/div[1]/div/').click()
             #print("post click, filling")
-
+                                         
             driver.find_element("xpath", '/html/body/div[4]/div/div[2]/form/div/div[1]/div/input').send_keys(e)
             time.sleep(1)
             driver.find_element("xpath", '/html/body/div[4]/div/div[2]/form/div/div[2]/div/input').send_keys(f)
@@ -72,7 +72,17 @@ class Westord:
             print("Done CIE")
         except NoSuchElementException:
             print("no such element :thinkies:")
-            return 1
+            print("trying other element")
+            driver.find_element("xpath", '/html/body/div[5]/div/div[2]/form/div/div[1]/div/input').send_keys(e)
+            time.sleep(1)
+            driver.find_element("xpath", '/html/body/div[5]/div/div[2]/form/div/div[2]/div/input').send_keys(f)
+            time.sleep(1)
+            driver.find_element("xpath", '/html/body/div[5]/div/div[2]/form/div/div[3]/div/input').send_keys(l)
+            time.sleep(2)
+            driver.find_element("xpath", '/html/body/div[5]/div/div[2]/form/div/div[5]/div/input').click()
+            time.sleep(2)
+            
+            return 0
         except StaleElementReferenceException:
             print("Ok stale")
             return 2
@@ -111,7 +121,7 @@ while True:
     w = Westord()
     firstN = random.choice(first)
     lastN  = random.choice(last)
-    email = firstN+random.choice(["","_","."])+lastN+"@"+random.choice(["hotmail.com", "gmail.com", "colorado.edu", "colostate.edu", "comcast.net"])
+    email = firstN+random.choice(["","_","."])+lastN+"@"+random.choice(["hotmail.com", "gmail.com", "colorado.edu", "colostate.edu", "comcast.net", "centurylink.com"])
     
     print(f"filling form with {firstN} {lastN}  {email}")
 
