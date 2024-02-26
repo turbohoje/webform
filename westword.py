@@ -30,11 +30,11 @@ class Westord:
         driver = self.driver
 
         driver.get("http://www.westword.com/best-of-denver-readers-choice-poll/best-extract-company")
-        time.sleep(2)
+        time.sleep(3)
         try:
             print("clicking via js")
             driver.execute_script("document.getElementById('question-18908674-1').click();")
-            time.sleep(1)
+            time.sleep(3)
 
             #some other fields, fill out a random number of them at random
             i = ["3", "4", "5", "6", "7", "9","10", "11", "12", "13", "15", "16", "17","18","19","21","22","23"]
