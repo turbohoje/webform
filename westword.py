@@ -3,8 +3,13 @@
 # Selenium imports.
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
-from selenium.common.exceptions import ElementClickInterceptedException, NoSuchElementException, StaleElementReferenceException
+from selenium.common.exceptions import UnexpectedAlertPresentException, ElementNotInteractableException, ElementClickInterceptedException, NoSuchElementException, StaleElementReferenceException
 from selenium.webdriver.common.action_chains import ActionChains
+
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
+
 import re, urllib3, sys, re
 
 import time, random, requests
@@ -29,58 +34,86 @@ class Westord:
     def fill(self, f, l, e):
         driver = self.driver
 
-        driver.get("http://www.westword.com/best-of-denver-readers-choice-poll/best-extract-company")
-        time.sleep(3)
+        driver.get("https://www.westword.com/best-of-denver-readers-choice-poll/best-new-cannabis-product")
+        time.sleep(5)
         try:
-            print("clicking via js")
-            driver.execute_script("document.getElementById('question-18908674-1').click();")
-            time.sleep(3)
+            page_height = driver.execute_script("return document.documentElement.scrollHeight;")
+            driver.set_window_size(800, page_height)
 
-            #some other fields, fill out a random number of them at random
-            i = ["3", "4", "5", "6", "7", "9","10", "11", "12", "13", "15", "16", "17","18","19","21","22","23"]
-            for x in range(0,random.randrange(len(i))):
-                i.pop(random.randrange(len(i)))
-            for id in i:
-                print("clicking random "+id)
-                driver.execute_script("a = document.evaluate('/html/body/div[3]/div/div[3]/div/div[1]/form/ul[2]/li[6]/ul/li["+id+"]/div[2]/div/div[1]', document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue;")
-                driver.execute_script("randElement = a.children[Math.floor(Math.random() * a.children.length)];")
-                driver.execute_script("randElement.firstChild.nextSibling.click()")
-                time.sleep(1)
-
+            print("closing popup")
+            first_element = WebDriverWait(driver, 10).until(
+                EC.element_to_be_clickable((By.XPATH, "/html/body/div[4]/div/div/form/div[1]/a[2]"))
+            )
+            first_element.click()
+            time.sleep(1)
             
-            print("filling")
-            driver.find_element("xpath", '/html/body/div[3]/div/div[3]/div/div[1]/form/div[2]/button').click()
+            print("filling best extract company")
+            first_element = WebDriverWait(driver, 10).until(
+                EC.element_to_be_clickable((By.XPATH, "//div[contains(text(), 'BEST EXTRACT COMPANY')]"))
+            )
+            first_element.click()
             time.sleep(1)
-            print("filling out email")
-            time.sleep(3)
-                                        #    /html/body/div[4]/div/div[2]/form/div/div[1]/div/input
-            #driver.find_element("xpath", '/html/body/div[4]/div/div[2]/form/div/div[1]/div/').click()
-            #print("post click, filling")
-                                         
-            driver.find_element("xpath", '/html/body/div[4]/div/div[2]/form/div/div[1]/div/input').send_keys(e)
-            time.sleep(1)
-            driver.find_element("xpath", '/html/body/div[4]/div/div[2]/form/div/div[2]/div/input').send_keys(f)
-            time.sleep(1)
-            driver.find_element("xpath", '/html/body/div[4]/div/div[2]/form/div/div[3]/div/input').send_keys(l)
-            time.sleep(2)
-            driver.find_element("xpath", '/html/body/div[4]/div/div[2]/form/div/div[5]/div/input').click()
+
+            print("clicking mhx")
+            input_element = WebDriverWait(driver, 50).until(
+                EC.presence_of_all_elements_located((By.XPATH, "//input[@value='Mile High Xtractions']"))
+            )
+            driver.execute_script("arguments[0][0].click();", input_element)
+                        
+            #driver.find_element("xpath", '/html/body/div[3]/div/div[3]/div/div/form/ul[2]/li[7]/ul/li[11]/div[2]/div/div[1]/').click()
+            print("done")
             time.sleep(2)
 
-            self.closeBrowser()
+            #<button class="fdn-best-of-poll-success-button" type="button" uk-toggle="target:#fdn-best-of-poll-submit-form">Submit Your Ballot</button>
+            
+            submit_button = WebDriverWait(driver, 50).until(
+                EC.presence_of_all_elements_located((By.XPATH, "//button[contains(@class, 'fdn-best-of-poll-success-button') and text()='Submit Your Ballot']"))
+            )
+            submit_button[0].click()
+            time.sleep(1)
+            
+            #<input type="email" id="best-of-submit-email" name="" required="">
+            email_input = WebDriverWait(driver, 10).until(
+                EC.visibility_of_element_located((By.ID, "best-of-submit-email"))
+            )
+            email_input.send_keys(e)
+            f_input = WebDriverWait(driver, 10).until(
+                EC.visibility_of_element_located((By.ID, "best-of-submit-first-name"))
+            )
+            f_input.send_keys(f)
+
+            l_input = WebDriverWait(driver, 10).until(
+                EC.visibility_of_element_located((By.ID, "best-of-submit-last-name"))
+            )
+            l_input.send_keys(l)
+            #   <input type="submit" name="submit" value="Yes, Submit My Ballot">
+            
+            time.sleep(1)
+            s_button = WebDriverWait(driver, 50).until(
+                EC.presence_of_all_elements_located((By.XPATH, "//input[@type='submit' and @name='submit' and @value='Yes, Submit My Ballot']"))
+            )
+            s_button[0].click()
+
+            #self.closeBrowser()
+            print("waiting to do it again")
+            time.sleep(1)
+
+            try:
+                # Wait for the element to be present and visible
+                confirmation_message = WebDriverWait(driver, 10).until(
+                    EC.visibility_of_element_located((By.XPATH, "//h3[contains(@class, 'fdn-best-of-poll-header-complete-subheader') and text()='Your Ballot Has Been Submitted!']"))
+                )
+                print("Confirmation message is visible on the page!")
+            except:
+                print("Confirmation message did not render within the timeout.")
+
+            driver.quit()
 
         except ElementClickInterceptedException:
             print("Done CIE")
         except NoSuchElementException:
             print("no such element :thinkies:")
             print("trying other element")
-            driver.find_element("xpath", '/html/body/div[5]/div/div[2]/form/div/div[1]/div/input').send_keys(e)
-            time.sleep(1)
-            driver.find_element("xpath", '/html/body/div[5]/div/div[2]/form/div/div[2]/div/input').send_keys(f)
-            time.sleep(1)
-            driver.find_element("xpath", '/html/body/div[5]/div/div[2]/form/div/div[3]/div/input').send_keys(l)
-            time.sleep(2)
-            driver.find_element("xpath", '/html/body/div[5]/div/div[2]/form/div/div[5]/div/input').click()
-            time.sleep(2)
             
             return 0
         except StaleElementReferenceException:
@@ -119,10 +152,14 @@ with open("last-names.txt") as ln:
 
 while True:
     w = Westord()
-    firstN = random.choice(first)
-    lastN  = random.choice(last)
-    email = firstN+random.choice(["","_","."])+lastN+"@"+random.choice(["hotmail.com", "gmail.com", "colorado.edu", "colostate.edu", "comcast.net", "centurylink.com"])
+    #firstN = random.choice(first)
+    #lastN  = random.choice(last)
+    #email = firstN+random.choice(["","_","."])+lastN+"@"+random.choice(["hotmail.com", "gmail.com", "colorado.edu", "colostate.edu", "comcast.net", "centurylink.com"])
     
+    firstN = "justin"
+    lastN = "russell"
+    email = "hector@justinrmeyer.com"
+
     print(f"filling form with {firstN} {lastN}  {email}")
 
     status = w.fill(firstN, lastN, email)
