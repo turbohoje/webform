@@ -66,7 +66,7 @@ class Westord:
         try:
             #page_height = driver.execute_script("return document.documentElement.scrollHeight;")
             #driver.set_window_size(1000, 100000)
-            driver.execute_script("document.body.style.zoom='25%';")
+            driver.execute_script("document.body.style.zoom='20%';")
             print("closing popup")
             first_element = WebDriverWait(driver, 10).until(
                 EC.element_to_be_clickable((By.XPATH, "/html/body/div[4]/div/div/form/div[1]/a[2]"))
