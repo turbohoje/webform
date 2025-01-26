@@ -10,7 +10,7 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 
-import re, urllib3, sys, re, os, csv, time, random, requests
+import re, urllib3, sys, re, os, csv, time, random, requests, random
 
 
 
@@ -42,6 +42,21 @@ class Westord:
         self.driver.execute_script("arguments[0][0].click();", input_element)            
         print("done")
         time.sleep(2)
+    
+    def question_random(self, key):
+        print(f"randoming {key}")
+        first_element = WebDriverWait(self.driver, 10).until(
+            EC.element_to_be_clickable((By.XPATH, f"//div[contains(text(), '{key}')]"))
+        )
+        first_element.click()
+        time.sleep(1)
+        print(f"clicking first element")
+        input_element = WebDriverWait(self.driver, 50).until(
+            EC.presence_of_all_elements_located((By.XPATH, f"//div[contains(text(), '{key}')]/parent::div/parent::li//input[@type='radio'][1]"))
+        )
+        self.driver.execute_script("arguments[0][0].click();", input_element)            
+        print("done")
+        time.sleep(1)
 
     def fill(self, f, l, e):
         driver = self.driver
@@ -58,6 +73,17 @@ class Westord:
             )
             first_element.click()
             time.sleep(1)
+
+            #randoms
+            random_question_names = ["BEST MUSHROOM COMPANY", "BEST INFUSED BEVERAGE COMPANY", "BEST MEDICAL DISPENSARY", "BEST EDIBLES COMPANY", "BEST HEAD SHOP", "BEST DISPENSARY - DENVER", "BEST CBN, CBG OR THCV PRODUCT", "BEST MEDICAL MARIJUANA DOCTOR", "BEST CANNABIS VAPE", "BEST NEW DISPENSARY", "BEST SOLVENTLESS HASH COMPANY", "BEST DISPENSARY CHAIN", "BEST FLOWER BRAND", "BEST IN-HOUSE FLOWER AT A DISPENSARY", "BEST CBD PRODUCT", "BEST DISPENSARY FOR A CONNOISSEUR", "BEST PRE-ROLL", "BEST NON-CANDY EDIBLE", "BEST CBD PET PRODUCT COMPANY", "BEST DISPENSARY - LAKEWOOD", "BEST VALUE AT A DISPENSARY", "BEST CUSTOMER SERVICE AT A DISPENSARY"]
+
+            sub = random.sample(random_question_names, 6)
+
+            for q in sub:
+                self.question_random(q)
+
+            
+
 
             #extract company
             self.question("BEST EXTRACT COMPANY", "Mile High Xtractions")
