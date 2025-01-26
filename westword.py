@@ -35,35 +35,46 @@ class Westord:
         driver.get("https://www.westword.com/best-of-denver-readers-choice-poll/best-new-cannabis-product")
         time.sleep(5)
         try:
-            page_height = driver.execute_script("return document.documentElement.scrollHeight;")
-            driver.set_window_size(800, page_height)
-
+            #page_height = driver.execute_script("return document.documentElement.scrollHeight;")
+            #driver.set_window_size(1000, 100000)
+            driver.execute_script("document.body.style.zoom='25%';")
             print("closing popup")
             first_element = WebDriverWait(driver, 10).until(
                 EC.element_to_be_clickable((By.XPATH, "/html/body/div[4]/div/div/form/div[1]/a[2]"))
             )
             first_element.click()
             time.sleep(1)
-            
+
+            #extract company
             print("filling best extract company")
             first_element = WebDriverWait(driver, 10).until(
                 EC.element_to_be_clickable((By.XPATH, "//div[contains(text(), 'BEST EXTRACT COMPANY')]"))
             )
             first_element.click()
             time.sleep(1)
-
             print("clicking mhx")
             input_element = WebDriverWait(driver, 50).until(
                 EC.presence_of_all_elements_located((By.XPATH, "//input[@value='Mile High Xtractions']"))
             )
-            driver.execute_script("arguments[0][0].click();", input_element)
-                        
-            #driver.find_element("xpath", '/html/body/div[3]/div/div[3]/div/div/form/ul[2]/li[7]/ul/li[11]/div[2]/div/div[1]/').click()
+            driver.execute_script("arguments[0][0].click();", input_element)            
             print("done")
             time.sleep(2)
 
-            #<button class="fdn-best-of-poll-success-button" type="button" uk-toggle="target:#fdn-best-of-poll-submit-form">Submit Your Ballot</button>
-            
+            #best new cannabis product
+            print("filling best new product")
+            first_element = WebDriverWait(driver, 10).until(
+                EC.element_to_be_clickable((By.XPATH, "//div[contains(text(), 'BEST NEW CANNABIS PRODUCT')]"))
+            )
+            first_element.click()
+            time.sleep(1)
+            print("clicking honey tokes")
+            input_element = WebDriverWait(driver, 50).until(
+                EC.presence_of_all_elements_located((By.XPATH, "//input[@value='\"Hunny Tokes\" by Mile High Xtractions']"))
+            )
+            driver.execute_script("arguments[0][0].click();", input_element)            
+            print("done")
+            time.sleep(2)
+
             submit_button = WebDriverWait(driver, 50).until(
                 EC.presence_of_all_elements_located((By.XPATH, "//button[contains(@class, 'fdn-best-of-poll-success-button') and text()='Submit Your Ballot']"))
             )
@@ -94,7 +105,7 @@ class Westord:
 
             #self.closeBrowser()
             print("waiting to do it again")
-            time.sleep(1)
+            time.sleep(10)
 
             try:
                 # Wait for the element to be present and visible
