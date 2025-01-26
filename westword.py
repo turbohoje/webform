@@ -28,6 +28,20 @@ class Westord:
     def closeBrowser(self):
         self.driver.close()
 
+    def question(self, key, value):
+        print(f"filling {key}")
+        first_element = WebDriverWait(self.driver, 10).until(
+            EC.element_to_be_clickable((By.XPATH, f"//div[contains(text(), '{key}')]"))
+        )
+        first_element.click()
+        time.sleep(1)
+        print(f"clicking {value}")
+        input_element = WebDriverWait(self.driver, 50).until(
+            EC.presence_of_all_elements_located((By.XPATH, f"//input[@value='{value}']"))
+        )
+        self.driver.execute_script("arguments[0][0].click();", input_element)            
+        print("done")
+        time.sleep(2)
 
     def fill(self, f, l, e):
         driver = self.driver
@@ -46,35 +60,13 @@ class Westord:
             time.sleep(1)
 
             #extract company
-            print("filling best extract company")
-            first_element = WebDriverWait(driver, 10).until(
-                EC.element_to_be_clickable((By.XPATH, "//div[contains(text(), 'BEST EXTRACT COMPANY')]"))
-            )
-            first_element.click()
-            time.sleep(1)
-            print("clicking mhx")
-            input_element = WebDriverWait(driver, 50).until(
-                EC.presence_of_all_elements_located((By.XPATH, "//input[@value='Mile High Xtractions']"))
-            )
-            driver.execute_script("arguments[0][0].click();", input_element)            
-            print("done")
-            time.sleep(2)
+            self.question("BEST EXTRACT COMPANY", "Mile High Xtractions")
 
             #best new cannabis product
-            print("filling best new product")
-            first_element = WebDriverWait(driver, 10).until(
-                EC.element_to_be_clickable((By.XPATH, "//div[contains(text(), 'BEST NEW CANNABIS PRODUCT')]"))
-            )
-            first_element.click()
-            time.sleep(1)
-            print("clicking honey tokes")
-            input_element = WebDriverWait(driver, 50).until(
-                EC.presence_of_all_elements_located((By.XPATH, "//input[@value='\"Hunny Tokes\" by Mile High Xtractions']"))
-            )
-            driver.execute_script("arguments[0][0].click();", input_element)            
-            print("done")
-            time.sleep(2)
+            self.question("BEST NEW CANNABIS PRODUCT", "\"Hunny Tokes\" by Mile High Xtractions")
 
+
+            #submit
             submit_button = WebDriverWait(driver, 50).until(
                 EC.presence_of_all_elements_located((By.XPATH, "//button[contains(@class, 'fdn-best-of-poll-success-button') and text()='Submit Your Ballot']"))
             )
