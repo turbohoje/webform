@@ -10,9 +10,7 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 
-import re, urllib3, sys, re
-
-import time, random, requests
+import re, urllib3, sys, re, os, csv, time, random, requests
 
 
 
@@ -133,6 +131,31 @@ class Westord:
 
         return 0
 
+## Main code
+# get names files
+file_name = "names.csv"
+url = "https://troutlake.co/gray/names.csv"
+
+# Check if the file exists locally
+if not os.path.exists(file_name):
+    print(f"{file_name} not found locally. Downloading from {url}...")
+    try:
+        # Download the file
+        response = requests.get(url, stream=True)
+        response.raise_for_status()  # Raise an error for bad status codes
+        
+        # Save the file locally
+        with open(file_name, 'wb') as file:
+            for chunk in response.iter_content(chunk_size=8192):
+                file.write(chunk)
+        
+        print(f"{file_name} downloaded successfully.")
+    except requests.exceptions.RequestException as e:
+        print(f"Error downloading {file_name}: {e}")
+else:
+    print(f"{file_name} already exists locally.")
+
+# ip
 IP = requests.get("https://icanhazip.com").text
 print(f"IP is {IP}")
 
@@ -156,9 +179,29 @@ while True:
     #lastN  = random.choice(last)
     #email = firstN+random.choice(["","_","."])+lastN+"@"+random.choice(["hotmail.com", "gmail.com", "colorado.edu", "colostate.edu", "comcast.net", "centurylink.com"])
     
-    firstN = "justin"
-    lastN = "russell"
-    email = "hector@justinrmeyer.com"
+    try:
+        # Open the file and read the lines
+        with open(file_name, mode="r") as file:
+            reader = list(csv.reader(file))
+            
+            # Ensure the file is not empty
+            if not reader:
+                print("The CSV file is empty.")
+            else:
+                # Choose a random line from the file
+                random_line = random.choice(reader)
+                
+                # Extract email, first name, and last name
+                email, firstN, lastN = random_line
+                print(f"Randomly selected entry:")
+                print(f"Email: {email}")
+                print(f"First Name: {firstN}")
+                print(f"Last Name: {lastN}")
+
+    except FileNotFoundError:
+        print(f"Error: The file '{file_name}' does not exist.")
+    except Exception as e:
+        print(f"An error occurred: {e}")
 
     print(f"filling form with {firstN} {lastN}  {email}")
 
