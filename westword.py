@@ -18,7 +18,8 @@ class Westord:
     def __init__(self):
         self.driver = webdriver.Chrome()# Selenium imports.
         chrome_options = webdriver.ChromeOptions()
-
+        chrome_options.add_argument("--headless")
+        chrome_options.add_argument("--mute-audio")
         # Comment the line below to switch OFF incognito mode.
         chrome_options.add_argument("--incognito")
         # Uncomment the line below to not open a browser window.
@@ -140,8 +141,8 @@ class Westord:
             s_button[0].click()
 
             #self.closeBrowser()
-            print("waiting to do it again")
-            time.sleep(10)
+            print("submit clicked, waiting for output")
+            time.sleep(1)
 
             try:
                 # Wait for the element to be present and visible
