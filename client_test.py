@@ -73,10 +73,10 @@ def main():
         conn.request("GET", "/download-log")
         resp = conn.getresponse()
 
-        print(f"Response status: {resp.status} {resp.reason}")
+        #print(f"Response status: {resp.status} {resp.reason}")
         if resp.status == 200:
             file_contents = resp.read()
-            print("File contents:")
+            #print("File contents:")
             print(file_contents.decode())
         else:
             print(resp.read().decode())

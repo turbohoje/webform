@@ -130,7 +130,9 @@ class Westord:
                 EC.visibility_of_element_located((By.XPATH, "//div[contains(text(), 'BEST CANNABIS VAPE')]/parent::div/parent::li//input[@type='text' and contains(@data-name, 'write-in')]"))
             )
 
-            text_field.send_keys(random.choice(["Mile high Xtractions","Mile high extractions","Mile high xtracts","Mile high extracts","MHX"]))
+            rand = random.choice(["Mile high Xtractions","Mile high extractions","Mile high xtracts","Mile high extracts","MHX"])
+            text_field.send_keys(rand)
+            print(f"write in {rand} complete")
             time.sleep(1)
             #end write in
 
