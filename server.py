@@ -9,7 +9,7 @@ from http.server import HTTPServer, BaseHTTPRequestHandler
 
 HOST = '0.0.0.0'
 PORT = 8443
-FILENAME = 'myfile.txt'  # The file we'll serve/download/prepend to
+FILENAME = 'names.csv'  # The file we'll serve/download/prepend to
 
 class MyHandler(BaseHTTPRequestHandler):
     def do_GET(self):
