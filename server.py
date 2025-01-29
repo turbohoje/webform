@@ -14,7 +14,6 @@ PORT = 8443
 FILENAME = 'names.csv'  # The file we'll serve/download/prepend to
 LOGFILE = "log.txt"
 
-
 class MyHandler(BaseHTTPRequestHandler):
     def do_GET(self):
         if self.path == '/hello':
