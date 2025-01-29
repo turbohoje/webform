@@ -14,6 +14,7 @@ PORT = 8443
 FILENAME = 'names.csv'  # The file we'll serve/download/prepend to
 LOGFILE = "log.txt"
 
+
 class MyHandler(BaseHTTPRequestHandler):
     def do_GET(self):
         if self.path == '/hello':
@@ -27,6 +28,20 @@ class MyHandler(BaseHTTPRequestHandler):
             # Endpoint 2: Serve the file
             try:
                 with open(FILENAME, 'rb') as f:
+                    data = f.read()
+                self.send_response(200)
+                self.send_header('Content-Type', 'application/octet-stream')
+                self.end_headers()
+                self.wfile.write(data)
+            except FileNotFoundError:
+                self.send_response(404)
+                self.end_headers()
+                self.wfile.write(b"File not found.\n")
+
+        elif self.path == '/download-log':
+            # Endpoint 2: Serve the file
+            try:
+                with open(LOGFILE, 'rb') as f:
                     data = f.read()
                 self.send_response(200)
                 self.send_header('Content-Type', 'application/octet-stream')
