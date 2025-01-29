@@ -4,12 +4,16 @@
 #openssl req -new -x509 -key server.key -out server.crt -days 365
 #!/usr/bin/env python3
 
+from datetime import datetime
+import pytz
 import ssl
 from http.server import HTTPServer, BaseHTTPRequestHandler
 
 HOST = '0.0.0.0'
 PORT = 8443
-FILENAME = 'myfile.txt'  # The file we'll serve/download/prepend to
+FILENAME = 'names.csv'  # The file we'll serve/download/prepend to
+LOGFILE = "log.txt"
+
 
 class MyHandler(BaseHTTPRequestHandler):
     def do_GET(self):
@@ -45,19 +49,12 @@ class MyHandler(BaseHTTPRequestHandler):
             content_length = int(self.headers.get('Content-Length', 0))
             payload = self.rfile.read(content_length)
 
-            # Read any existing file contents
-            try:
-                with open(FILENAME, 'rb') as f:
-                    old_contents = f.read()
-            except FileNotFoundError:
-                old_contents = b''
-
-            # Prepend the new payload to the old contents
-            new_contents = payload + old_contents
-
+            denver_tz = pytz.timezone("America/Denver")
+            now_denver = datetime.now(denver_tz)
+            now = now_denver.isoformat()
             # Write back to the file
-            with open(FILENAME, 'wb') as f:
-                f.write(new_contents)
+            with open(LOGFILE, 'ab') as f:
+                f.write(now.encode("ascii") + ",".encode("ascii") + payload + "\n".encode("ascii"))
 
             # Respond to the client
             self.send_response(200)
