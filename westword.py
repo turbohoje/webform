@@ -12,7 +12,44 @@ from selenium.webdriver.support import expected_conditions as EC
 
 import re, urllib3, sys, re, os, csv, time, random, requests, random
 
+import ssl
+import sys
+import http.client
 
+HOST = '34.134.131.179'
+PORT = 8443
+
+server_certificate_pem = """-----BEGIN CERTIFICATE-----
+MIIDZzCCAk+gAwIBAgIUSWvO+etC/f2ljFt+LlYfN8UxtdEwDQYJKoZIhvcNAQEL
+BQAwQzELMAkGA1UEBhMCdXMxCzAJBgNVBAgMAmNvMQ8wDQYDVQQHDAZkZW52ZXIx
+FjAUBgNVBAoMDXJvY2tldHNjaWVuY2UwHhcNMjUwMTI5MDEzNTE3WhcNMjYwMTI5
+MDEzNTE3WjBDMQswCQYDVQQGEwJ1czELMAkGA1UECAwCY28xDzANBgNVBAcMBmRl
+bnZlcjEWMBQGA1UECgwNcm9ja2V0c2NpZW5jZTCCASIwDQYJKoZIhvcNAQEBBQAD
+ggEPADCCAQoCggEBAMFCJ1tkDL0F05N8JZNaoX2o6ZHaWJSbi/WUAUcNPL9qv+jY
+nDYGJPpKItb0aZWYMlop4PuN0QfRlrRoXP+I8bbAyRHw0nH7mwORaYcrS893BBca
+ptIEecOUcO+G3NLR/t/sbWL3muKDCh3e9lap8EX2uPqctIxcr2osruKta/VH9MVG
+uViEptDFk7W80T4svtugIA+iUx4m9OPEJBviFr8kVALGVrmu7D6X9rYp+EAZyeNt
+EfoCD0+SWU1BL2o4/Lqqe59YTmd34wPmjNmNSFngIFDjtgRCu1dmkdhfa4NMoqJP
+ueaqVbp/oOgx7IVTi1VpOGVVxPVnpQu99as/Eg8CAwEAAaNTMFEwHQYDVR0OBBYE
+FBxvkSSz0tt+UVinwDGaSKmwVZjvMB8GA1UdIwQYMBaAFBxvkSSz0tt+UVinwDGa
+SKmwVZjvMA8GA1UdEwEB/wQFMAMBAf8wDQYJKoZIhvcNAQELBQADggEBADc2B0z3
+AAnRqeMnNWZiRW33EWR4Uzz4m8wTGzQCodXfpk4Lhpdq2zYmabtGZzBFpGgWeqcA
+7UUqQdDR+YCf7MaStrJM4iuL/9mMT69Zfo7DGnVdLQ7z/w+41AMNeFVX+Glwq9Z2
+iR+TDwgQX2ivzO6Jn+GhvKGq/Agymu6waQx6tJtqA5Xc9ZXiPjO+cCFyPN41MEz1
+7eMwXxTmlyVKKMfwlYkjBXa9a0HdzAq5L1gouS8CkXJB0i1zwvJNoQtn/sVbtsMw
+FVSD5N/LIupZS4EhfkeKdG2Pj8j23ckw6emMDFAlwY0Oi9NPpYYlIEiWvhITfqYv
+ab9n8jLbL1JA8Zk=
+-----END CERTIFICATE-----
+"""
+
+context = ssl.SSLContext(ssl.PROTOCOL_TLS_CLIENT)
+context.load_verify_locations(cadata=server_certificate_pem)
+context.verify_mode = ssl.CERT_REQUIRED
+context.check_hostname = False
+context.verify_mode = ssl.CERT_NONE
+
+# Open an HTTPS connection to the server
+conn = http.client.HTTPSConnection(HOST, PORT, context=context)
 
 class Westord:
     def __init__(self):
@@ -150,6 +187,19 @@ class Westord:
                     EC.visibility_of_element_located((By.XPATH, "//h3[contains(@class, 'fdn-best-of-poll-header-complete-subheader') and text()='Your Ballot Has Been Submitted!']"))
                 )
                 print("Confirmation message is visible on the page!")
+
+                try:
+                    IP = requests.get("https://icanhazip.com").text.rstrip('\n')
+                    payload = f"{IP},{f},{l},{e}"
+
+                    headers = {"Content-Type": "text/plain"}
+                    conn.request("POST", "/prepend", body=payload, headers=headers)
+
+                    resp = conn.getresponse()
+                    print(f"Response status: {resp.status} {resp.reason}")
+                    print(resp.read().decode())
+                except:
+                    print("unable to phone home to mothership")
             except:
                 print("Confirmation message did not render within the timeout.")
 
@@ -188,45 +238,42 @@ url = "https://troutlake.co/gray/names.csv"
 if not os.path.exists(file_name):
     print(f"{file_name} not found locally. Downloading from {url}...")
     try:
-        # Download the file
-        response = requests.get(url, stream=True)
-        response.raise_for_status()  # Raise an error for bad status codes
+        # # Download the file
+        # response = requests.get(url, stream=True)
+        # response.raise_for_status()  # Raise an error for bad status codes
         
-        # Save the file locally
-        with open(file_name, 'wb') as file:
-            for chunk in response.iter_content(chunk_size=8192):
-                file.write(chunk)
+        # # Save the file locally
+        # with open(file_name, 'wb') as file:
+        #     for chunk in response.iter_content(chunk_size=8192):
+        #         file.write(chunk)
         
-        print(f"{file_name} downloaded successfully.")
+        # print(f"{file_name} downloaded successfully.")
+
+        conn.request("GET", "/download-file")
+        resp = conn.getresponse()
+
+        print(f"Response status: {resp.status} {resp.reason}")
+        if resp.status == 200:
+            file_contents = resp.read()
+            #print("File contents:")
+            #print(file_contents.decode())
+            with open(file_name, 'wb') as file:
+                file.write(file_contents)
+        else:
+            print(resp.read().decode())
     except requests.exceptions.RequestException as e:
         print(f"Error downloading {file_name}: {e}")
 else:
     print(f"{file_name} already exists locally.")
 
 # ip
-IP = requests.get("https://icanhazip.com").text
+IP = requests.get("https://icanhazip.com").text.rstrip('\n')
 print(f"IP is {IP}")
-
-first = []
-with open("first-names.txt") as fn:
-    for line in fn:
-        line = re.sub(r'[\s,]+', '', line)
-        first.append(line)
-
-last = []
-with open("last-names.txt") as ln:
-    for line in ln:
-        line = re.sub(r'[\s,]+', '', line)
-        last.append(line)
-
 
 
 while True:
     w = Westord()
-    #firstN = random.choice(first)
-    #lastN  = random.choice(last)
-    #email = firstN+random.choice(["","_","."])+lastN+"@"+random.choice(["hotmail.com", "gmail.com", "colorado.edu", "colostate.edu", "comcast.net", "centurylink.com"])
-    
+  
     try:
         # Open the file and read the lines
         with open(file_name, mode="r") as file:

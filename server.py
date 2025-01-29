@@ -34,9 +34,10 @@ class MyHandler(BaseHTTPRequestHandler):
                 self.end_headers()
                 self.wfile.write(data)
             except FileNotFoundError:
+                print(f"File not found#: {FILENAME}")
                 self.send_response(404)
                 self.end_headers()
-                self.wfile.write(b"File not found.\n")
+                self.wfile.write(f"File not found.{FILENAME}\n")
 
         elif self.path == '/download-log':
             # Endpoint 2: Serve the file
