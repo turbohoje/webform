@@ -11,7 +11,8 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 
 import re, urllib3, sys, re, os, csv, time, random, requests, random
-
+import random
+import datetime
 import ssl
 import sys
 import http.client
@@ -51,6 +52,24 @@ context.verify_mode = ssl.CERT_NONE
 # Open an HTTPS connection to the server
 conn = http.client.HTTPSConnection(HOST, PORT, context=context)
 
+def generate_timeout():
+    now = datetime.datetime.now()
+    current_hour = now.hour
+    base_timeout = random.random() * 1500  # Base timeout: 0 to 3600 seconds
+
+    # During business hours (9:00 to 17:00), use multiplier 1.
+    if 9 <= current_hour < 17:
+        multiplier = 1
+    elif current_hour < 9:
+        # For early morning hours (0 to 8), interpolate multiplier from 5 at midnight to 1 at 9:00.
+        # When current_hour is 0, multiplier = 1 + 4 * ((9-0)/9) = 5.
+        multiplier = 1 + 5 * ((9 - current_hour) / 9)
+    else:  # current_hour >= 17
+        # For evening hours (17 to 23), interpolate multiplier from 1 at 17:00 to 5 at 24:00.
+        multiplier = 1 + 5 * ((current_hour - 17) / (24 - 17))  # denominator is 7
+
+    return int(base_timeout * multiplier)
+
 class Westord:
     def __init__(self):
         self.driver = webdriver.Chrome()# Selenium imports.
@@ -63,6 +82,7 @@ class Westord:
         # chrome_options.add_argument("--headless")
         self.driver = webdriver.Chrome(options=chrome_options)
 
+    
     def closeBrowser(self):
         self.driver.close()
 
@@ -234,7 +254,7 @@ class Westord:
 ## Main code
 # get names files
 file_name = "names.csv"
-url = "https://troutlake.co/gray/names.csv"
+# url = "https://troutlake.co/gray/names.csv"
 
 # Check if the file exists locally
 if not os.path.exists(file_name):
@@ -303,11 +323,12 @@ while True:
     print(f"filling form with {firstN} {lastN}  {email}")
 
     status = w.fill(firstN, lastN, email)
-    del(w) 
+    
     
     if status == 0: #expected result, no immediate retry
-        sleeptime = 3600
+        sleeptime = generate_timeout()
         print(f"sleeping {sleeptime}")
         time.sleep(sleeptime)
     else:
         print(f"failed code {status}")
+    del(w) 
