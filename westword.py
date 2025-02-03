@@ -88,7 +88,7 @@ class Westord:
 
     def question(self, key, value):
         print(f"filling {key}")
-        first_element = WebDriverWait(self.driver, 10).until(
+        first_element = WebDriverWait(self.driver, 20).until(
             EC.element_to_be_clickable((By.XPATH, f"//div[contains(text(), '{key}')]"))
         )
         first_element.click()
@@ -103,7 +103,7 @@ class Westord:
     
     def question_random(self, key):
         print(f"randoming {key}")
-        first_element = WebDriverWait(self.driver, 10).until(
+        first_element = WebDriverWait(self.driver, 20).until(
             EC.element_to_be_clickable((By.XPATH, f"//div[contains(text(), '{key}')]"))
         )
         first_element.click()
