@@ -71,6 +71,7 @@ def generate_timeout():
     return int(base_timeout * multiplier)
 
 class Westord:
+    timeout = 25
     def __init__(self):
         self.driver = webdriver.Chrome()# Selenium imports.
         chrome_options = webdriver.ChromeOptions()
@@ -88,13 +89,17 @@ class Westord:
 
     def question(self, key, value):
         print(f"filling {key}")
+<<<<<<< HEAD
         first_element = WebDriverWait(self.driver, 20).until(
+=======
+        first_element = WebDriverWait(self.driver, self.timeout).until(
+>>>>>>> 98dd8f8 (fix timeout)
             EC.element_to_be_clickable((By.XPATH, f"//div[contains(text(), '{key}')]"))
         )
         first_element.click()
         time.sleep(1)
         print(f"clicking {value}")
-        input_element = WebDriverWait(self.driver, 50).until(
+        input_element = WebDriverWait(self.driver, self.timeout).until(
             EC.presence_of_all_elements_located((By.XPATH, f"//input[@value='{value}']"))
         )
         self.driver.execute_script("arguments[0][0].click();", input_element)            
@@ -103,13 +108,17 @@ class Westord:
     
     def question_random(self, key):
         print(f"randoming {key}")
+<<<<<<< HEAD
         first_element = WebDriverWait(self.driver, 20).until(
+=======
+        first_element = WebDriverWait(self.driver, self.timeout).until(
+>>>>>>> 98dd8f8 (fix timeout)
             EC.element_to_be_clickable((By.XPATH, f"//div[contains(text(), '{key}')]"))
         )
         first_element.click()
         time.sleep(1)
         print(f"clicking first element")
-        input_element = WebDriverWait(self.driver, 50).until(
+        input_element = WebDriverWait(self.driver, self.timeout).until(
             EC.presence_of_all_elements_located((By.XPATH, f"//div[contains(text(), '{key}')]/parent::div/parent::li//input[@type='radio'][1]"))
         )
         self.driver.execute_script("arguments[0][0].click();", input_element)            
@@ -126,7 +135,7 @@ class Westord:
             #driver.set_window_size(1000, 100000)
             driver.execute_script("document.body.style.zoom='10%';")
             print("closing popup")
-            first_element = WebDriverWait(driver, 10).until(
+            first_element = WebDriverWait(driver, self.timeout).until(
                 EC.element_to_be_clickable((By.XPATH, "/html/body/div[4]/div/div/form/div[1]/a[2]"))
             )
             first_element.click()
@@ -134,7 +143,7 @@ class Westord:
 
             #write in
             print(f"filling write in")
-            first_element = WebDriverWait(self.driver, 10).until(
+            first_element = WebDriverWait(self.driver, self.timeout).until(
                 EC.element_to_be_clickable((By.XPATH, f"//div[contains(text(), 'BEST CANNABIS VAPE')]"))
             )
             first_element.click()
@@ -146,7 +155,7 @@ class Westord:
             )
             self.driver.execute_script("arguments[0][0].click();", input_element)
             #//div[contains(text(), 'BEST CANNABIS VAPE')]/parent::div/parent::li//input[@type='text' and contains(@data-name, 'write-in')]
-            text_field = WebDriverWait(driver, 10).until(
+            text_field = WebDriverWait(driver, self.timeout).until(
                 EC.visibility_of_element_located((By.XPATH, "//div[contains(text(), 'BEST CANNABIS VAPE')]/parent::div/parent::li//input[@type='text' and contains(@data-name, 'write-in')]"))
             )
 
@@ -178,16 +187,16 @@ class Westord:
             time.sleep(1)
             
             #<input type="email" id="best-of-submit-email" name="" required="">
-            email_input = WebDriverWait(driver, 10).until(
+            email_input = WebDriverWait(driver, self.timeout).until(
                 EC.visibility_of_element_located((By.ID, "best-of-submit-email"))
             )
             email_input.send_keys(e)
-            f_input = WebDriverWait(driver, 10).until(
+            f_input = WebDriverWait(driver, self.timeout).until(
                 EC.visibility_of_element_located((By.ID, "best-of-submit-first-name"))
             )
             f_input.send_keys(f)
 
-            l_input = WebDriverWait(driver, 10).until(
+            l_input = WebDriverWait(driver, self.timeout).until(
                 EC.visibility_of_element_located((By.ID, "best-of-submit-last-name"))
             )
             l_input.send_keys(l)
@@ -205,7 +214,7 @@ class Westord:
 
             try:
                 # Wait for the element to be present and visible
-                confirmation_message = WebDriverWait(driver, 10).until(
+                confirmation_message = WebDriverWait(driver, self.timeout).until(
                     EC.visibility_of_element_located((By.XPATH, "//h3[contains(@class, 'fdn-best-of-poll-header-complete-subheader') and text()='Your Ballot Has Been Submitted!']"))
                 )
                 print("Confirmation message is visible on the page!")
