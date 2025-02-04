@@ -71,8 +71,8 @@ def generate_timeout():
     return int(base_timeout * multiplier)
 
 class Westord:
-    timeout = 25
     def __init__(self):
+        self.timeout = 35
         self.driver = webdriver.Chrome()# Selenium imports.
         chrome_options = webdriver.ChromeOptions()
         chrome_options.add_argument("--headless")
@@ -89,11 +89,7 @@ class Westord:
 
     def question(self, key, value):
         print(f"filling {key}")
-<<<<<<< HEAD
-        first_element = WebDriverWait(self.driver, 20).until(
-=======
         first_element = WebDriverWait(self.driver, self.timeout).until(
->>>>>>> 98dd8f8 (fix timeout)
             EC.element_to_be_clickable((By.XPATH, f"//div[contains(text(), '{key}')]"))
         )
         first_element.click()
@@ -108,11 +104,7 @@ class Westord:
     
     def question_random(self, key):
         print(f"randoming {key}")
-<<<<<<< HEAD
-        first_element = WebDriverWait(self.driver, 20).until(
-=======
         first_element = WebDriverWait(self.driver, self.timeout).until(
->>>>>>> 98dd8f8 (fix timeout)
             EC.element_to_be_clickable((By.XPATH, f"//div[contains(text(), '{key}')]"))
         )
         first_element.click()
