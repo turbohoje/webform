@@ -72,7 +72,7 @@ def generate_timeout():
 
 class Westord:
     def __init__(self):
-        self.timeout = 35
+        self.timeout = 55
         self.driver = webdriver.Chrome()# Selenium imports.
         chrome_options = webdriver.ChromeOptions()
         chrome_options.add_argument("--headless")
