@@ -75,7 +75,7 @@ class Westord:
         self.timeout = 55
         self.driver = webdriver.Chrome()# Selenium imports.
         chrome_options = webdriver.ChromeOptions()
-        chrome_options.add_argument("--headless")
+        #chrome_options.add_argument("--headless")
         chrome_options.add_argument("--mute-audio")
         # Comment the line below to switch OFF incognito mode.
         chrome_options.add_argument("--incognito")
@@ -158,7 +158,7 @@ class Westord:
             #end write in
 
             #randoms
-            random_question_names = ["BEST MUSHROOM COMPANY", "BEST INFUSED BEVERAGE COMPANY", "BEST MEDICAL DISPENSARY", "BEST EDIBLES COMPANY", "BEST HEAD SHOP", "BEST DISPENSARY - DENVER", "BEST CBN, CBG OR THCV PRODUCT", "BEST MEDICAL MARIJUANA DOCTOR", "BEST CANNABIS VAPE", "BEST NEW DISPENSARY", "BEST SOLVENTLESS HASH COMPANY", "BEST DISPENSARY CHAIN", "BEST FLOWER BRAND", "BEST IN-HOUSE FLOWER AT A DISPENSARY", "BEST CBD PRODUCT", "BEST DISPENSARY FOR A CONNOISSEUR", "BEST PRE-ROLL", "BEST NON-CANDY EDIBLE", "BEST CBD PET PRODUCT COMPANY", "BEST DISPENSARY - LAKEWOOD", "BEST VALUE AT A DISPENSARY", "BEST CUSTOMER SERVICE AT A DISPENSARY"]
+            random_question_names = ["BEST INFUSED BEVERAGE COMPANY", "BEST MEDICAL DISPENSARY", "BEST EDIBLES COMPANY", "BEST HEAD SHOP", "BEST DISPENSARY - DENVER", "BEST CBN, CBG OR THCV PRODUCT", "BEST MEDICAL MARIJUANA DOCTOR", "BEST CANNABIS VAPE", "BEST NEW DISPENSARY", "BEST SOLVENTLESS HASH COMPANY", "BEST DISPENSARY CHAIN", "BEST FLOWER BRAND", "BEST IN-HOUSE FLOWER AT A DISPENSARY", "BEST CBD PRODUCT", "BEST DISPENSARY FOR A CONNOISSEUR", "BEST PRE-ROLL", "BEST NON-CANDY EDIBLE", "BEST CBD PET PRODUCT COMPANY", "BEST DISPENSARY - LAKEWOOD", "BEST VALUE AT A DISPENSARY", "BEST CUSTOMER SERVICE AT A DISPENSARY"]
             sub = random.sample(random_question_names, 6)
             for q in sub:
                 self.question_random(q)
