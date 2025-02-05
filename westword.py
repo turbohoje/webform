@@ -75,7 +75,7 @@ class Westord:
         self.timeout = 55
         self.driver = webdriver.Chrome()# Selenium imports.
         chrome_options = webdriver.ChromeOptions()
-        #chrome_options.add_argument("--headless")
+        chrome_options.add_argument("--headless")
         chrome_options.add_argument("--mute-audio")
         # Comment the line below to switch OFF incognito mode.
         chrome_options.add_argument("--incognito")
