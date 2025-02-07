@@ -229,7 +229,8 @@ class Westord:
             driver.quit()
 
         except ElementClickInterceptedException:
-            print("Done CIE")
+            print("Failed CIE")
+            return 1
         except NoSuchElementException:
             print("no such element :thinkies:")
             print("trying other element")
