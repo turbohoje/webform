@@ -171,11 +171,25 @@ class Westord:
             self.question("BEST NEW CANNABIS PRODUCT", "\"Hunny Tokes\" by Mile High Xtractions")
 
 
-            #submit
-            submit_button = WebDriverWait(driver, 50).until(
-                EC.presence_of_all_elements_located((By.XPATH, "//button[contains(@class, 'fdn-best-of-poll-success-button') and text()='Submit Your Ballot']"))
-            )
-            submit_button[0].click()
+            max_retries = 3
+            for attempt in range(1, max_retries + 1):
+                try:
+                    print(f"Attempt {attempt}/{max_retries}")
+                    submit_button = WebDriverWait(driver, self.timeout).until(
+                        EC.presence_of_all_elements_located((By.XPATH, "//button[text()='Submit Your Ballot']"))
+                    )
+                    print("clicking submit")
+                    submit_button[0].click()
+                except:
+                    print(f"Attempt {attempt} failed with exception, retrying")
+                    if attempt == max_retries:
+                        # If it's the last attempt, re-raise the exception
+                        time.sleep(3)
+                        #raise
+                    else:
+                        # Optionally wait before retrying
+                        time.sleep(1)
+                        print("Retrying...\n")
             time.sleep(1)
             
             #<input type="email" id="best-of-submit-email" name="" required="">
@@ -183,26 +197,34 @@ class Westord:
                 EC.visibility_of_element_located((By.ID, "best-of-submit-email"))
             )
             email_input.send_keys(e)
+            print("email entered")
             f_input = WebDriverWait(driver, self.timeout).until(
                 EC.visibility_of_element_located((By.ID, "best-of-submit-first-name"))
             )
             f_input.send_keys(f)
-
+            print("first name entered")
             l_input = WebDriverWait(driver, self.timeout).until(
                 EC.visibility_of_element_located((By.ID, "best-of-submit-last-name"))
             )
             l_input.send_keys(l)
+            print("last name entered")
             #   <input type="submit" name="submit" value="Yes, Submit My Ballot">
             
             time.sleep(1)
             s_button = WebDriverWait(driver, 50).until(
+                #<input type="submit" name="submit" value="Yes, Submit My Ballot">
+                
                 EC.presence_of_all_elements_located((By.XPATH, "//input[@type='submit' and @name='submit' and @value='Yes, Submit My Ballot']"))
             )
-            s_button[0].click()
+            print("clicking submit")
+            try:
+                s_button[0].click()
+            except:
+                print("clicking submit failed /shrug")
 
             #self.closeBrowser()
             print("submit clicked, waiting for output")
-            time.sleep(1)
+            time.sleep(2)
 
             try:
                 # Wait for the element to be present and visible
