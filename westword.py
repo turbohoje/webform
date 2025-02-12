@@ -16,6 +16,7 @@ import datetime
 import ssl
 import sys
 import http.client
+import subprocess
 
 HOST = '34.134.131.179'
 PORT = 8443
@@ -70,17 +71,30 @@ def generate_timeout():
 
     return int(base_timeout * multiplier)
 
+def cycle_wifi(interface="Wi-Fi"):
+    #works on a mbp, hotel inet reissues ip on connection.  exploiting.
+    subprocess.run(["networksetup", "-setairportpower", interface, "off"])
+    time.sleep(2)
+    subprocess.run(["networksetup", "-setairportpower", interface, "on"])
+    time.sleep(10)
+
 class Westord:
     def __init__(self):
         self.timeout = 55
         self.driver = webdriver.Chrome()# Selenium imports.
         chrome_options = webdriver.ChromeOptions()
-        chrome_options.add_argument("--headless")
         chrome_options.add_argument("--mute-audio")
         # Comment the line below to switch OFF incognito mode.
         chrome_options.add_argument("--incognito")
         # Uncomment the line below to not open a browser window.
-        # chrome_options.add_argument("--headless")
+        chrome_options.add_argument("--headless")
+
+        with open("./useragents.txt", "r") as file:
+            lines = file.read().splitlines()  # Read all lines, stripping newline characters
+        random_line = random.choice(lines) 
+        print(f"User agent: {random_line}")
+        chrome_options.add_argument(f"user-agent={random_line}")
+        
         self.driver = webdriver.Chrome(options=chrome_options)
 
     
@@ -353,6 +367,7 @@ while True:
         sleeptime = generate_timeout()
         print(f"sleeping {sleeptime}")
         time.sleep(sleeptime)
+        #cycle_wifi()
     else:
         print(f"failed code {status}")
     del(w) 
